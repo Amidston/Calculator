@@ -15,6 +15,7 @@ const multiply = document.getElementById("multiply")
 const divide = document.getElementById("divide")
 const point = document.getElementById("point")
 const result = document.getElementById("result")
+let signs = true
 
 function disableButton() {
   plus.disabled = true
@@ -32,11 +33,6 @@ function enableButton() {
   divide.disabled = false
   point.disabled = false
   result.disabled = false
-}
-function limit() {
-  if (screen.value.length > 16) {
-    screen.value = screen.value.substring(0, 16)
-  }
 }
 
 one.addEventListener("click", () => {
@@ -128,8 +124,7 @@ point.addEventListener("click", () => {
   limit()
 })
 
-let signs = true
-document.addEventListener("keypress", (e) => {
+document.addEventListener("keydown", (e) => {
   if (
     (e.key == "/" && signs) ||
     (e.key == "+" && signs) ||
@@ -143,10 +138,15 @@ document.addEventListener("keypress", (e) => {
   } else if (e.key == "Enter") {
     screen.value = eval(screen.value)
     limit()
-  } else if (isNaN(e.key)) {
+  } else if (e.key == "Backspace") {
     screen.value = screen.value.substring(0, screen.value.length - 1)
     enableButton()
-    limit()
+    limit()  
+  } else if (e.key == "Delete") {
+    screen.value = ""
+    enableButton()
+  }
+  else if (isNaN(e.key)) {
   } else {
     screen.value += e.key
     signs = true
@@ -158,3 +158,15 @@ result.addEventListener("click", () => {
   screen.value = eval(screen.value)
   limit()
 })
+
+if (screen.value.length == 0) {
+  disableButton()
+  signs = false
+} else {
+    enableButton()
+  }
+function limit() {
+  if (screen.value.length > 16) {
+    screen.value = screen.value.substring(0, 16)
+  }
+}
